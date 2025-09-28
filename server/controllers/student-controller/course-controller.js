@@ -53,7 +53,7 @@ const getAllStudentViewCourses = async (req, res) => {
       .sort(sortParam)
       .skip(skip)
       .limit(Number(limit));
-
+      
     res.status(200).json({
       success: true,
       data: coursesList,

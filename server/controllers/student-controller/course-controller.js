@@ -7,7 +7,7 @@ const getAllStudentViewCourses = async (req, res) => {
     const {
       category = "",
       level = "",
-      language = "",
+      primaryLanguage = "",
       sortBy = "price-lowtohigh",
       page = 1,
       limit = 10,
@@ -25,18 +25,24 @@ const getAllStudentViewCourses = async (req, res) => {
       if (arr.length) filters.level = { $in: arr };
     }
 
-    if (language) {
-      const arr = language.split(",").filter(Boolean);
-      if (arr.length) filters.language = { $in: arr };
+    if (primaryLanguage) {
+      const arr = primaryLanguage.split(",").filter(Boolean);
+      if (arr.length) {
+        // Check both primaryLanguage and language fields for backward compatibility
+        filters.$or = [
+          { primaryLanguage: { $in: arr } },
+          { language: { $in: arr } }
+        ];
+      }
     }
 
     let sortParam = {};
     switch (sortBy) {
       case "price-lowtohigh":
-        sortParam.pricing = 1;
+        sortParam.price = 1;
         break;
       case "price-hightolow":
-        sortParam.pricing = -1;
+        sortParam.price = -1;
         break;
       case "title-atoz":
         sortParam.title = 1;
@@ -45,7 +51,7 @@ const getAllStudentViewCourses = async (req, res) => {
         sortParam.title = -1;
         break;
       default:
-        sortParam.pricing = 1;
+        sortParam.price = 1;
     }
 
     const skip = (page - 1) * limit;

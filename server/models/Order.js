@@ -17,13 +17,8 @@ const OrderSchema = new Schema({
   courseId: String,
   coursePricing: String,
   // Idempotency support
-  idempotencyKey: { type: String, index: true, unique: true, sparse: true },
+  idempotencyKey: { type: String, unique: true, sparse: true },
   approvalUrl: { type: String, default: "" },
 }, { timestamps: true });
-
-// Ensure uniqueness is created even if model compiled multiple times
-try {
-  OrderSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
-} catch (_) {}
 
 export default model("Order", OrderSchema);

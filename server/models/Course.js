@@ -55,8 +55,7 @@ const CourseSchema = new Schema(
     instructorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-      index: true,
+      required: true
     },
     instructorName: {
       type: String,
@@ -75,8 +74,7 @@ const CourseSchema = new Schema(
     category: {
       type: String,
       required: [true, 'Course category is required'],
-      trim: true,
-      index: true
+      trim: true
     },
     level: {
       type: String,
@@ -171,8 +169,7 @@ const CourseSchema = new Schema(
         values: ['pending', 'approved', 'rejected'],
         message: 'Moderation status must be pending, approved, or rejected'
       },
-      default: 'pending',
-      index: true
+      default: 'pending'
     },
     adminNote: {
       type: String,

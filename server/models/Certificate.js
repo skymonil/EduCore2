@@ -13,14 +13,12 @@ const CertificateSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-      index: true,
+      required: true
     },
     courseId: {
       type: Schema.Types.ObjectId,
       ref: "Course",
-      required: true,
-      index: true,
+      required: true
     },
     studentName: {
       type: String,

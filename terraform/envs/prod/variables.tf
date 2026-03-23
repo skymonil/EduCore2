@@ -141,6 +141,16 @@ variable "ecs_config" {
       paypal_client_id       = optional(string, "")
       paypal_secret_id       = optional(string, "")
       redis_url              = optional(string, "")
+      
+      secret_key             = optional(string, "")
+  db_name                = optional(string, "")
+  gemini_api_key         = optional(string, "")
+  openai_api_key         = optional(string, "")
+
+  sandbox_url            = optional(string, "")
+  sandbox_region         = optional(string, "")
+  sandbox_email          = optional(string, "")
+  sandbox_password       = optional(string, "")
     }), {})
 
     # App configuration with defaults

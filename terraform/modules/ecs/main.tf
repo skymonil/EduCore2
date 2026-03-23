@@ -226,6 +226,69 @@ resource "aws_ssm_parameter" "client_url" {
   value = var.ecs_config.client_url
 }
 
+# ====================
+# DATABASE CONFIG
+# ====================
+
+resource "aws_ssm_parameter" "db_name" {
+  name  = "/${var.environment}/app/db_name"
+  type  = "String"
+  value = var.ecs_config.secrets.db_name
+}
+
+# ====================
+# APP SECRET KEY
+# ====================
+
+resource "aws_ssm_parameter" "secret_key" {
+  name  = "/${var.environment}/app/secret_key"
+  type  = "SecureString"
+  value = var.ecs_config.secrets.secret_key
+}
+
+# ====================
+# AI KEYS
+# ====================
+
+resource "aws_ssm_parameter" "gemini_api_key" {
+  name  = "/${var.environment}/app/gemini_api_key"
+  type  = "SecureString"
+  value = var.ecs_config.secrets.gemini_api_key
+}
+
+resource "aws_ssm_parameter" "openai_api_key" {
+  name  = "/${var.environment}/app/openai_api_key"
+  type  = "SecureString"
+  value = var.ecs_config.secrets.openai_api_key
+}
+
+# ====================
+# SANDBOX CONFIG
+# ====================
+
+resource "aws_ssm_parameter" "sandbox_url" {
+  name  = "/${var.environment}/app/sandbox_url"
+  type  = "String"
+  value = var.ecs_config.secrets.sandbox_url
+}
+
+resource "aws_ssm_parameter" "sandbox_region" {
+  name  = "/${var.environment}/app/sandbox_region"
+  type  = "String"
+  value = var.ecs_config.secrets.sandbox_region
+}
+
+resource "aws_ssm_parameter" "sandbox_email" {
+  name  = "/${var.environment}/app/sandbox_email"
+  type  = "SecureString"
+  value = var.ecs_config.secrets.sandbox_email
+}
+
+resource "aws_ssm_parameter" "sandbox_password" {
+  name  = "/${var.environment}/app/sandbox_password"
+  type  = "SecureString"
+  value = var.ecs_config.secrets.sandbox_password
+}
 
 
 resource "aws_cloudwatch_log_group" "ecs_app_logs" {
@@ -284,18 +347,27 @@ resource "aws_ecs_task_definition" "this" {
         { name = "EMAIL_SERVICE", valueFrom = aws_ssm_parameter.email_service.arn },
         { name = "PAYPAL_CLIENT_ID", valueFrom = aws_ssm_parameter.paypal_client_id.arn },
         { name = "PAYPAL_SECRET_ID", valueFrom = aws_ssm_parameter.paypal_secret_id.arn },
-       
+       { name = "DB_NAME", valueFrom = aws_ssm_parameter.db_name.arn },
+
+{ name = "SECRET_KEY", valueFrom = aws_ssm_parameter.secret_key.arn },
+
+{ name = "GEMINI_API_KEY", valueFrom = aws_ssm_parameter.gemini_api_key.arn },
+
+{ name = "OPENAI_API_KEY", valueFrom = aws_ssm_parameter.openai_api_key.arn },
+
+{ name = "SANDBOX_URL", valueFrom = aws_ssm_parameter.sandbox_url.arn },
+
+{ name = "SANDBOX_REGION", valueFrom = aws_ssm_parameter.sandbox_region.arn },
+
+{ name = "SANDBOX_EMAIL", valueFrom = aws_ssm_parameter.sandbox_email.arn },
+
+{ name = "SANDBOX_PASSWORD", valueFrom = aws_ssm_parameter.sandbox_password.arn },
       ],
       [for name, arn in var.external_secrets : { name = name, valueFrom = arn }]
     )
 
     # 3. Added missing environment list structure
-    environment = [
-      {
-        name  = "SECRET_KEY"
-        value = var.ecs_config.secrets.jwt_secret
-      }
-    ]
+   
 
     logConfiguration = {
       logDriver = "awslogs"
